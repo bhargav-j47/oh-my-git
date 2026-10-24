@@ -150,16 +150,6 @@ margin_bottom = 293.0
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.2
 
-[node name="Terminal" parent="Rows/Columns/RightSide" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 301.0
-margin_right = 920.0
-margin_bottom = 1020.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 1.5
-
 [node name="Controls" type="HBoxContainer" parent="Rows"]
 margin_top = 1020.0
 margin_right = 1904.0
@@ -175,6 +165,13 @@ margin_right = 1904.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Terminal" parent="." instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 744.0
+margin_right = 1904.0
+margin_bottom = 720.0
 
 [node name="SuccessSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )

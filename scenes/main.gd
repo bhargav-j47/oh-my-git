@@ -2,8 +2,8 @@ extends Control
 
 var dragged = null
 
-# --- PATHS FOR "TALL TERMINAL" LAYOUT ---
-onready var terminal = $Rows/Columns/RightSide/Terminal
+# The terminal is a detached, floating window that is a direct child of Main.
+onready var terminal = $Terminal
 onready var input = terminal.get_node("Rows/InputLine/Input")
 onready var output = terminal.get_node("Rows/TopHalf/Output")
 onready var repositories_node = $Rows/Columns/Repositories
@@ -29,25 +29,14 @@ func _ready():
 		get_tree().change_scene("res://scenes/sandbox.tscn")
 		return
 	
-	# We connect the terminal's completion signal to our update function.
-	if terminal.has_signal("command_entered"):
-		if not terminal.is_connected("command_entered", self, "update_repos"):
-			terminal.connect("command_entered", self, "update_repos")
-			print("DEBUG: Connected 'command_entered' signal.")
-			
-	# Also connect the input line directly just in case
-	if input:
-		if not input.is_connected("text_entered", self, "_on_input_text_entered"):
-			input.connect("text_entered", self, "_on_input_text_entered")
+	# Refresh the repositories, file browser and goals as soon as a command has
+	# *finished*. Commands run asynchronously, so refreshing right after the
+	# player pressed Enter would show the state from before the command ran.
+	if not terminal.is_connected("command_done", self, "update_repos"):
+		terminal.connect("command_done", self, "update_repos")
 
 	load_level(game.current_level)
 	input.grab_focus()
-
-# Helper to catch direct input events if terminal signal fails
-func _on_input_text_entered(new_text):
-	# Wait a tiny bit for the command to actually run, then update
-	yield(get_tree().create_timer(0.1), "timeout")
-	update_repos()
 
 func _process(delta):
 	if _hint_server.is_connection_available():
